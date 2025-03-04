@@ -5,8 +5,8 @@ from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 
-from config import cfg
 from register_handlers import register_all_handlers
+from settings import cfg
 
 dp = Dispatcher()
 register_all_handlers(dp)
