@@ -1,4 +1,4 @@
-from pydantic import Field, PostgresDsn, computed_field
+from pydantic import ConfigDict, Field, PostgresDsn, computed_field
 from pydantic_settings import BaseSettings
 
 
@@ -11,6 +11,9 @@ class Settings(BaseSettings):
     postgres_host: str = Field(default="localhost", alias="PG_HOST")
     postgres_port: int = Field(default=5432, alias="PG_PORT")
     postgres_database: str = Field(default="supply_planning", alias="PG_DATABASE")
+
+    analytics_api_url: str = Field("https://seller-analytics-api.wildberries.ru/api")
+    supplies_api_url: str = Field("https://supplies-api.wildberries.ru/api")
 
     @computed_field
     @property

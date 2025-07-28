@@ -27,14 +27,14 @@ def upgrade() -> None:
         sa.sql.column("button_text", sa.String),
         sa.sql.column("order_position", sa.Integer),
     )
-    op.bulk_insert(sections_table, [{"name": "main_menu"}, {"name": "settings"}, {"name": "warehouses"}])
+    op.bulk_insert(sections_table, [{"name": "main_menu"}, {"name": "settings"}])
     op.bulk_insert(
         menu_categories_table,
         [
             {
                 "section_id": 1,
-                "callback_name": "get_warehouses",
-                "button_text": "📋 Получить список складов",
+                "callback_name": "plan_supplies",
+                "button_text": "📋 Запланировать поставки",
                 "order_position": 1,
             },
             {"section_id": 1, "callback_name": "get_settings", "button_text": "⚙️ Настройки", "order_position": 2},
@@ -57,10 +57,6 @@ def upgrade() -> None:
 def downgrade() -> None:
     """Downgrade schema."""
     sections_table = sa.sql.table("sections", sa.sql.column("name", sa.String))
-    menu_categories_table = sa.sql.table("menu_categories", sa.sql.column("callback_name", sa.String))
-    op.execute(sections_table.delete().where(sections_table.c.name.in_(["main_menu", "settings", "warehouses"])))
-    op.execute(
-        menu_categories_table.delete().where(
-            menu_categories_table.c.callback_name.in_(["get_warehouses", "get_settings", "set_rules", "set_thresholds"])
-        )
-    )
+    menu_categories_table = sa.sql.table("menu_categories", sa.sql.column("section_id", sa.Integer))
+    op.execute(menu_categories_table.delete().where(menu_categories_table.c.section_id.in_([1, 2])))
+    op.execute(sections_table.delete().where(sections_table.c.name.in_(["main_menu", "settings"])))
