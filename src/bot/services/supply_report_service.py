@@ -19,7 +19,6 @@ class SupplyReportService(AsyncBaseService):
     @staticmethod
     def _prepare_dataframe(raw_data: list) -> pd.DataFrame:
         """Преобразует сырые данные в DataFrame с обработкой сложных структур"""
-        # Создаем DataFrame из сырых данных
         df = pd.DataFrame(raw_data)
         column_rename_map = {
             "vendor_code": "Артикул продавца",
@@ -28,9 +27,7 @@ class SupplyReportService(AsyncBaseService):
             "warehouse": "Склад",
         }
         df = df.rename(columns=column_rename_map)
-        # Обрабатываем вложенные структуры
         for column in df.columns:
-            # Преобразуем списки словарей (например, warehouses)
             if df[column].apply(lambda x: isinstance(x, list) and all(isinstance(i, dict) for i in x)).any():
                 df[column] = df[column].apply(
                     lambda lst: "\n".join(f"{wh.get('warehouse', '')}:{wh.get('quantity', '')}" for wh in lst)
@@ -38,17 +35,14 @@ class SupplyReportService(AsyncBaseService):
                     else ""
                 )
 
-            # Преобразуем словари
             elif df[column].apply(lambda x: isinstance(x, dict)).any():
                 df[column] = df[column].apply(
                     lambda d: "\n".join(f"{k}:{v}" for k, v in d.items()) if isinstance(d, dict) else ""
                 )
 
-        # Добавляем строку "Итого"
         total_quantity = df["Кол-во"].sum()
         total_row = {"Баркод": "Итого", "Кол-во": total_quantity}
 
-        # Добавляем итоговую строку в DataFrame
         df = pd.concat([df, pd.DataFrame([total_row])], ignore_index=True)
 
         return df
@@ -61,41 +55,31 @@ class SupplyReportService(AsyncBaseService):
 
         with io.BytesIO() as buffer:
             with pd.ExcelWriter(buffer, engine="openpyxl") as writer:
-                # Получаем уникальные названия складов
                 unique_warehouses = [wh for wh in df["Склад"].unique() if not pd.isna(wh)]
 
-                # Если нет складов - создаем пустой лист
                 if not unique_warehouses:
                     df.to_excel(writer, sheet_name="Данные", index=False)
                 else:
-                    # Создаем лист для каждого склада
                     for warehouse in unique_warehouses:
-                        # Фильтруем данные по складу
                         df_warehouse = df[df["Склад"] == warehouse].copy()
 
                         if "Склад" in df_warehouse.columns:
                             df_warehouse = df_warehouse.drop(columns=["Склад"])
-                        # Добавляем итоговую строку
                         warehouse_total = df_warehouse["Кол-во"].sum()
                         total_row = pd.DataFrame({"Баркод": ["Итого"], "Кол-во": [warehouse_total]})
 
-                        # Объединяем с основными данными
                         df_warehouse = pd.concat([df_warehouse, total_row], ignore_index=True)
 
-                        # Создаем лист (ограничение 31 символ)
                         sheet_name = str(warehouse)[:31]
                         df_warehouse.to_excel(writer, sheet_name=sheet_name, index=False)
 
-                        # Форматируем лист склада
                         ws = writer.sheets[sheet_name]
-                        last_row = len(df_warehouse) + 1  # +1 из-за заголовка
+                        last_row = len(df_warehouse) + 1
 
-                        # Выделяем итоговую строку жирным
                         for col_num in range(1, len(df_warehouse.columns) + 1):
                             cell = ws.cell(row=last_row, column=col_num)
                             cell.font = Font(bold=True)
 
-                # Автонастройка ширины для всех листов
                 for sheet_name in writer.sheets:
                     worksheet = writer.sheets[sheet_name]
 
@@ -103,7 +87,6 @@ class SupplyReportService(AsyncBaseService):
                         max_length = 0
                         col_letter = get_column_letter(col_idx)
 
-                        # Проверяем все строки в столбце
                         for row in range(1, worksheet.max_row + 1):
                             cell_value = worksheet.cell(row=row, column=col_idx).value
                             if cell_value is not None:
@@ -111,7 +94,6 @@ class SupplyReportService(AsyncBaseService):
                                 if length > max_length:
                                     max_length = length
 
-                        # Устанавливаем ширину с ограничениями
                         adjusted_width = min(50, max(10, max_length + 2))
                         worksheet.column_dimensions[col_letter].width = adjusted_width
 
