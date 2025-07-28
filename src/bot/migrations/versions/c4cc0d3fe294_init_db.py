@@ -34,10 +34,7 @@ def upgrade() -> None:
         sa.Column("callback_name", sa.String(), nullable=False),
         sa.Column("button_text", sa.String(), nullable=False),
         sa.Column("order_position", sa.Integer(), nullable=False),
-        sa.ForeignKeyConstraint(
-            ["section_id"],
-            ["sections.id"],
-        ),
+        sa.ForeignKeyConstraint(["section_id"], ["sections.id"], ondelete="cascade"),
         sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint("callback_name"),
     )

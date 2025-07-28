@@ -18,8 +18,13 @@ class SettingsHandler:
         ) -> None:
             await state.update_data(previous_state=MenuStates.start)
             await state.set_state(MenuStates.settings)
-            settings_keyboard_builder = await settings_menu_service()
-            await callback.message.answer(
-                "Выберите настройки для редактирования:",
-                reply_markup=settings_keyboard_builder.as_markup(resize_keyboard=True),
+
+            await callback.answer(
+                text="⚙️ Раздел настроек находится в разработке. Скоро будет доступен!", show_alert=True
             )
+            # settings_keyboard_builder = await settings_menu_service()
+            # await callback.message.answer(
+            #     "Выберите настройки для редактирования:",
+            #     reply_markup=settings_keyboard_builder.as_markup(resize_keyboard=True),
+            # )
+            # TODO Добавить кнопки по изменению пороговых значений + добавлению/удалению складов
