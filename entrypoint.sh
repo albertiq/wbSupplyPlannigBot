@@ -13,10 +13,10 @@ fi
 
 if [ "$RUN_MIGRATIONS" = "true" ]; then
     echo "Applying database migrations..."
-    cd /app/src/bot
+    cd /src/bot/migrations
     alembic upgrade head
-    cd /app
+    cd ..
 fi
 
 echo "Starting Telegram Bot..."
-exec python -m src.bot.app
+exec python -m bot.app
