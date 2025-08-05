@@ -11,12 +11,8 @@ if [ -n "$PG_HOST" ] && [ -n "$PG_PORT" ]; then
     echo "PostgreSQL is available!"
 fi
 
-if [ "$RUN_MIGRATIONS" = "true" ]; then
-    echo "Applying database migrations..."
-    cd src/bot
-    alembic upgrade head
-    cd ..
-fi
+echo "Applying database migrations..."
+alembic upgrade head
 
 echo "Starting Telegram Bot..."
-exec python -m bot.app
+exec python -m src.bot.app
