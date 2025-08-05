@@ -2,6 +2,10 @@
 
 set -e
 
+echo "Current directory: $(pwd)"
+echo "Directory structure:"
+ls -lR /app
+
 if [ -n "$PG_HOST" ] && [ -n "$PG_PORT" ]; then
     echo "Checking PostgreSQL connection at $PG_HOST:$PG_PORT"
     while ! nc -z $PG_HOST $PG_PORT; do
