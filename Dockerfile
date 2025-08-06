@@ -16,5 +16,5 @@ RUN pip install --no-cache-dir --upgrade pip && \
 COPY src/ /app/src/
 COPY entrypoint.sh /app/
 
-RUN chmod +x /app/entrypoint.sh
-ENTRYPOINT ["sh", "/app/entrypoint.sh"]
+CMD cd /app/src/bot && alembic upgrade head && \
+    python -m app
