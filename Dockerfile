@@ -14,7 +14,6 @@ RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
 COPY src/ /app/src/
-COPY entrypoint.sh /app/
 
 CMD cd /app/src/bot && alembic upgrade head && \
     python -m app
