@@ -30,6 +30,10 @@ class SettingsMenuKeyboard:
     BUTTON_ROW_SIZE = 1
 
 
+class SupportMenuKeyboard:
+    SUPPORT_BUTTON = KeyboardButton.SUPPORT_BUTTON
+
+
 class ReportStatus:
     DONE = "done"
     PROCESSING = "processing"
