@@ -6,6 +6,7 @@ from openpyxl.styles import Font
 from openpyxl.utils import get_column_letter
 
 from services.base import AsyncBaseService
+from utils.date_helper import get_local_time
 
 
 class SupplyReportService(AsyncBaseService):
@@ -49,7 +50,7 @@ class SupplyReportService(AsyncBaseService):
 
     @staticmethod
     async def create_excel_file(df: pd.DataFrame) -> BufferedInputFile | None:
-        now = datetime.now()
+        now = get_local_time()
         if df.empty:
             return None
 

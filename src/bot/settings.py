@@ -16,6 +16,7 @@ class Settings(BaseSettings):
     supplies_api_url: str = Field("https://supplies-api.wildberries.ru/api")
 
     support_username: str = Field("user", alias="SUPPORT_USERNAME")
+    timezone: str = Field("Asia/Yekaterinburg", alias="TZ")
 
     @computed_field
     @property
