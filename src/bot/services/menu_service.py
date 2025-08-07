@@ -6,7 +6,7 @@ from repositories.menu_categories import MenuCategoriesRepository
 from services.base import AsyncBaseService
 from services.marketplace_service import MarketplaceService
 from services.supply_report_service import SupplyReportService
-from utils.const import MainMenuKeyboard, MenuSectionId, SettingsMenuKeyboard
+from utils.const import MainMenuKeyboard, MenuSectionId, SettingsMenuKeyboard, SupportMenuKeyboard
 
 
 class BaseMenuService(AsyncBaseService):
@@ -18,14 +18,15 @@ class BaseMenuService(AsyncBaseService):
     async def get_menu_keyboard_builder(
         menu_categories_repo: MenuCategoriesRepository,
         section_id: int,
-        extra_button: InlineKeyboardButton,
+        extra_buttons: list[InlineKeyboardButton],
         button_row_size: int,
     ) -> InlineKeyboardBuilder:
         keyboard_builder = InlineKeyboardBuilder()
         menu_categories = await menu_categories_repo.get_menu_categories_by_section_id(section_id)
         for category in menu_categories:
             keyboard_builder.button(text=category.button_text, callback_data=category.callback_name)
-        keyboard_builder.add(extra_button)
+        for extra_button in extra_buttons:
+            keyboard_builder.add(extra_button)
         keyboard_builder.adjust(button_row_size)
         return keyboard_builder
 
@@ -36,7 +37,10 @@ class MainMenuService(BaseMenuService):
 
     async def __call__(self, section_id: int = MenuSectionId.MAIN_MENU) -> InlineKeyboardBuilder:
         main_keyboard_builder = await self.get_menu_keyboard_builder(
-            self.menu_categories_repo, section_id, MainMenuKeyboard.EXTRA_BUTTON, MainMenuKeyboard.BUTTON_ROW_SIZE
+            self.menu_categories_repo,
+            section_id,
+            [SupportMenuKeyboard.SUPPORT_BUTTON, MainMenuKeyboard.EXTRA_BUTTON],
+            MainMenuKeyboard.BUTTON_ROW_SIZE,
         )
         return main_keyboard_builder
 
@@ -49,7 +53,7 @@ class SettingsMenuService(BaseMenuService):
         settings_keyboard_builder = await self.get_menu_keyboard_builder(
             self.menu_categories_repo,
             section_id,
-            SettingsMenuKeyboard.EXTRA_BUTTON,
+            [SettingsMenuKeyboard.EXTRA_BUTTON],
             SettingsMenuKeyboard.BUTTON_ROW_SIZE,
         )
         return settings_keyboard_builder

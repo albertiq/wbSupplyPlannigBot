@@ -15,6 +15,8 @@ class Settings(BaseSettings):
     analytics_api_url: str = Field("https://seller-analytics-api.wildberries.ru/api")
     supplies_api_url: str = Field("https://supplies-api.wildberries.ru/api")
 
+    support_username: str = Field("user", alias="SUPPORT_USERNAME")
+
     @computed_field
     @property
     def postgres_dsn(self) -> PostgresDsn:
