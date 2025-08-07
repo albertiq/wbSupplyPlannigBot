@@ -22,7 +22,7 @@ class MenuSectionId:
 
 class MainMenuKeyboard:
     EXTRA_BUTTON = KeyboardButton.CANCEL_BUTTON
-    BUTTON_ROW_SIZE = 2
+    BUTTON_ROW_SIZE = 1
 
 
 class SettingsMenuKeyboard:
