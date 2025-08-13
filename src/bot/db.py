@@ -25,6 +25,7 @@ class Database:
             pool_size=10,
             max_overflow=20,
             pool_timeout=60,
+            pool_pre_ping=True,
         )
         self._session_factory = async_scoped_session(
             async_sessionmaker(bind=self.engine, expire_on_commit=False), asyncio.current_task
