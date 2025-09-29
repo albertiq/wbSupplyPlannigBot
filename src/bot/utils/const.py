@@ -1,11 +1,5 @@
 from keyboards.inline import KeyboardButton
 
-GROUPED_WAREHOUSES = {
-    "Москва": ("Коледино", "Подольск", "Электросталь", "Тула"),
-    "Казань": ("Казань", "Самара (Новосемейкино)"),
-}
-WAREHOUSES_LIST = ("Москва", "Краснодар", "Казань", "Екатеринбург - Перспективный 12")
-
 
 class CallbackName:
     SETTINGS_CALLBACK = "get_settings"
