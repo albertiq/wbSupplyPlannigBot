@@ -1,11 +1,5 @@
 from keyboards.inline import KeyboardButton
 
-GROUPED_WAREHOUSES = {
-    "Москва": ("Коледино", "Подольск", "Электросталь", "Тула"),
-    "Казань": ("Казань", "Самара (Новосемейкино)"),
-}
-WAREHOUSES_LIST = ("Москва", "Краснодар", "Казань", "Екатеринбург - Перспективный 12")
-
 
 class CallbackName:
     SETTINGS_CALLBACK = "get_settings"
@@ -48,3 +42,21 @@ class WarehouseRemainsInfo:
     ON_THE_WAY_TO_CLIENT = "В пути до получателей"
     ON_THE_WAY_BACK = "В пути возвраты на склад WB"
     TOTAL_IN_WAREHOUSES = "Всего находится на складах"
+
+
+class SupplySettings:
+    # Пороги для количества товаров в пути
+    MIN_TO_CLIENT_THRESHOLD = "min_to_client_threshold"
+    MAX_TO_CLIENT_LOW = "max_to_client_low"
+    MAX_TO_CLIENT_MEDIUM = "max_to_client_medium"
+
+    # Пороги для остатков на складе
+    WAREHOUSE_REMAINS_THRESHOLD = "warehouse_remains_threshold"
+
+    # Пороги для общего количества
+    TOTAL_THRESHOLD = "total_threshold"
+
+    # Количества для заказа
+    QUANTITY_SMALL = "quantity_small"
+    QUANTITY_MEDIUM = "quantity_medium"
+    QUANTITY_LARGE = "quantity_large"

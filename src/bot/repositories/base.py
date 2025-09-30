@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from sqlalchemy import select
+from sqlalchemy import ColumnElement, select
 from sqlalchemy.ext.asyncio import async_scoped_session
 from typing import Any
 
@@ -37,14 +37,30 @@ class SqlAlchemyRepository(AsyncBaseRepository):
             return results.scalar_one_or_none()
 
     async def retrieve_many(
-        self, model: type[Base], where_clause: list | None = None, order_by: list | None = None
+        self,
+        model: type[Base],
+        where_clause: list | None = None,
+        order_by: list | None = None,
+        join_models: list[tuple[type[Base], ColumnElement]] | None = None,
+        join_type: str = "inner",
+        options: list | None = None,
     ) -> Any:
         statement = select(model)
+
+        if join_models:
+            for join_model in join_models:
+                join_model, on_clause = join_model
+                if join_type == "left":
+                    statement = statement.join(join_model, on_clause, isouter=True)
+                else:
+                    statement = statement.join(join_model, on_clause)
 
         if where_clause:
             statement = statement.where(*where_clause)
         if order_by:
             statement = statement.order_by(*order_by)
+        if options:
+            statement = statement.options(*options)
 
         async with self.session() as session:
             results = await session.execute(statement=statement)
