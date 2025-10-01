@@ -11,7 +11,6 @@ from repositories.warehouses import WarehousesRepository
 from services.base import AsyncBaseService
 from services.supply_settings_service import SupplySettingService
 from utils import const
-from utils.const import SupplySettings
 
 
 class MarketplaceService(AsyncBaseService):
@@ -112,14 +111,14 @@ class MarketplaceService(AsyncBaseService):
         result = []
 
         settings = await self.supply_settings_service.get_settings()
-        min_to_client = settings.get(SupplySettings.MIN_TO_CLIENT_THRESHOLD, 3)
-        max_to_client_low = settings.get(SupplySettings.MAX_TO_CLIENT_LOW, 10)
-        max_to_client_medium = settings.get(SupplySettings.MAX_TO_CLIENT_MEDIUM, 20)
-        warehouse_remains_threshold = settings.get(SupplySettings.WAREHOUSE_REMAINS_THRESHOLD, 5)
-        total_threshold = settings.get(SupplySettings.TOTAL_THRESHOLD, 50)
-        quantity_small = settings.get(SupplySettings.QUANTITY_SMALL, 5)
-        quantity_medium = settings.get(SupplySettings.QUANTITY_MEDIUM, 10)
-        quantity_large = settings.get(SupplySettings.QUANTITY_LARGE, 20)
+        min_to_client = settings.get(const.SupplySettings.MIN_TO_CLIENT_THRESHOLD, 3)
+        max_to_client_low = settings.get(const.SupplySettings.MAX_TO_CLIENT_LOW, 10)
+        max_to_client_medium = settings.get(const.SupplySettings.MAX_TO_CLIENT_MEDIUM, 20)
+        warehouse_remains_threshold = settings.get(const.SupplySettings.WAREHOUSE_REMAINS_THRESHOLD, 5)
+        total_threshold = settings.get(const.SupplySettings.TOTAL_THRESHOLD, 50)
+        quantity_small = settings.get(const.SupplySettings.QUANTITY_SMALL, 5)
+        quantity_medium = settings.get(const.SupplySettings.QUANTITY_MEDIUM, 10)
+        quantity_large = settings.get(const.SupplySettings.QUANTITY_LARGE, 20)
 
         all_warehouses = {row.group.name if row.group else row.name for row in warehouses}
         for warehouse in all_warehouses:
@@ -127,7 +126,6 @@ class MarketplaceService(AsyncBaseService):
             to_client = remains_info.get(const.WarehouseRemainsInfo.ON_THE_WAY_TO_CLIENT, 0)
             total = remains_info.get(const.WarehouseRemainsInfo.TOTAL_IN_WAREHOUSES, 0)
             quantity = 0
-            # TODO вынести значения как настраиваемые константы (например в бд)
             if (
                 (not to_client and not total)
                 or (0 < to_client < min_to_client and total > total_threshold)

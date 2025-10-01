@@ -18,6 +18,9 @@ class SupplySettingService(AsyncBaseService):
             self._cache = {setting.name: setting.value for setting in settings}
         return self._cache
 
-    async def refresh_settings(self):
+    async def refresh_settings(self) -> None:
         self._cache = None
         await self.get_settings()
+
+    async def update_setting(self, setting_id: int, new_values: dict) -> None:
+        await self.supply_settings_repo.update_setting(setting_id, new_values)

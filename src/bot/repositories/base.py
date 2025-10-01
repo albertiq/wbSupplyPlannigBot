@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from sqlalchemy import ColumnElement, select
+from sqlalchemy import ColumnElement, select, update
 from sqlalchemy.ext.asyncio import async_scoped_session
 from typing import Any
 
@@ -69,3 +69,9 @@ class SqlAlchemyRepository(AsyncBaseRepository):
     async def create(self, model: type[Base], **kwargs) -> None:
         self.session.add(model)
         await self.session.commit()
+
+    async def update(self, model: type[Base], where_clause: list, values: dict):
+        statement = update(model).where(*where_clause).values(values)
+        async with self.session() as session:
+            await session.execute(statement=statement)
+            await session.commit()

@@ -12,3 +12,9 @@ class SupplySettingsRepository(SqlAlchemyRepository):
         return await self.retrieve_many(
             model=SupplySettings,
         )
+
+    async def get_supply_setting_by_id(self, setting_id: int) -> SupplySettings:
+        return await self.retrieve(model=SupplySettings, where_clause=[SupplySettings.id == setting_id])
+
+    async def update_setting(self, setting_id: int, values: dict):
+        await self.update(model=SupplySettings, where_clause=[SupplySettings.id == setting_id], values=values)
