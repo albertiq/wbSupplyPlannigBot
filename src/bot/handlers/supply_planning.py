@@ -5,6 +5,7 @@ from containers import Container
 from logger.logger import logger
 from services.menu_service import SupplyPlanningMenuService
 from utils.const import CallbackName
+from utils.user_access import check_user_access
 
 
 class SupplyPlanningHandler:
@@ -15,6 +16,11 @@ class SupplyPlanningHandler:
             bot: Bot,
             supply_planning_service: SupplyPlanningMenuService = Container.supply_planning_service(),
         ) -> None:
+            # TODO вынести возможно в middleware
+            user = callback.from_user.username
+            if not await check_user_access(user):
+                await callback.answer("❌ У вас нет доступа к этому разделу", show_alert=True)
+                return
             msg = await callback.message.answer("📊 Начинаю формирование отчета...")
 
             try:
