@@ -8,6 +8,7 @@ class CallbackName:
     SUPPLY_PLANNING_CALLBACK = "plan_supplies"
     SUPPLY_PLANNING_SETTINGS_CALLBACK = "supply_thresholds_settings"
     REFRESH_SUPPLY_SETTINGS = "refresh_settings"
+    WAREHOUSES_SETTINGS = "warehouses_settings"
 
 
 class MenuSectionId:
