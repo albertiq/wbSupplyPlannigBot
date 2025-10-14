@@ -70,7 +70,7 @@ class SqlAlchemyRepository(AsyncBaseRepository):
         self.session.add(model)
         await self.session.commit()
 
-    async def update(self, model: type[Base], where_clause: list, values: dict):
+    async def update(self, model: type[Base], where_clause: list, values: dict) -> None:
         statement = update(model).where(*where_clause).values(values)
         async with self.session() as session:
             await session.execute(statement=statement)

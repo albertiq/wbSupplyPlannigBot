@@ -7,9 +7,9 @@ from api.clients.marketplace_client import MarketplaceAnalyticsClient, Marketpla
 from api.schemas.warehouse_remains import WarehouseRemainsReportData
 from logger.logger import logger
 from models import Warehouses
+from repositories.supply_settings import SupplySettingsRepository
 from repositories.warehouses import WarehousesRepository
 from services.base import AsyncBaseService
-from services.supply_settings_service import SupplySettingService
 from utils import const
 
 
@@ -19,12 +19,12 @@ class MarketplaceService(AsyncBaseService):
         analytics_api_client: MarketplaceAnalyticsClient,
         supplies_api_client: MarketplaceSuppliesClient,
         warehouses_repo: WarehousesRepository,
-        supply_settings_service: SupplySettingService,
+        supply_settings_repo: SupplySettingsRepository,
     ):
         self.api_analytics_client = analytics_api_client
         self.api_supplies_client = supplies_api_client
         self.warehouses_repo = warehouses_repo
-        self.supply_settings_service = supply_settings_service
+        self.supply_settings_repo = supply_settings_repo
 
     async def __call__(self, *args, **kwargs) -> Any:
         return await self.plan_supplies()
@@ -110,7 +110,8 @@ class MarketplaceService(AsyncBaseService):
     ) -> list[dict]:
         result = []
 
-        settings = await self.supply_settings_service.get_settings()
+        settings = await self.supply_settings_repo.get_supply_settings()
+        settings = {setting.name: setting.value for setting in settings}
         min_to_client = settings.get(const.SupplySettings.MIN_TO_CLIENT_THRESHOLD, 3)
         max_to_client_low = settings.get(const.SupplySettings.MAX_TO_CLIENT_LOW, 10)
         max_to_client_medium = settings.get(const.SupplySettings.MAX_TO_CLIENT_MEDIUM, 20)

@@ -1,6 +1,6 @@
 from aiogram import Dispatcher
 
-from handlers import back, cancel, settings, start, supply_planning
+from handlers import back, cancel, settings, start, supply_planning, supply_planning_settings
 
 
 def register_all_handlers(dp: Dispatcher) -> None:
@@ -9,3 +9,4 @@ def register_all_handlers(dp: Dispatcher) -> None:
     supply_planning.SupplyPlanningHandler(dp)
     cancel.CancelHandler(dp)
     back.BackButtonHandler(dp)
+    supply_planning_settings.SupplyPlanningSettingsHandler(dp)

@@ -6,6 +6,8 @@ class CallbackName:
     BACK_CALLBACK = "back"
     CANCEL_CALLBACK = "cancel"
     SUPPLY_PLANNING_CALLBACK = "plan_supplies"
+    SUPPLY_PLANNING_SETTINGS_CALLBACK = "supply_thresholds_settings"
+    REFRESH_SUPPLY_SETTINGS = "refresh_settings"
 
 
 class MenuSectionId:
@@ -21,6 +23,7 @@ class MainMenuKeyboard:
 
 class SettingsMenuKeyboard:
     EXTRA_BUTTON = KeyboardButton.BACK_BUTTON
+    REFRESH_BUTTON = KeyboardButton.REFRESH_BUTTON
     BUTTON_ROW_SIZE = 1
 
 
