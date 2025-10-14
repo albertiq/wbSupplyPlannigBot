@@ -6,9 +6,13 @@ from repositories.menu_categories import MenuCategoriesRepository
 from repositories.supply_settings import SupplySettingsRepository
 from repositories.warehouses import WarehousesRepository
 from services.marketplace_service import MarketplaceService
-from services.menu_service import MainMenuService, SettingsMenuService, SupplyPlanningMenuService
+from services.menu_service import (
+    MainMenuService,
+    SettingsMenuService,
+    SupplyPlanningMenuService,
+    SupplySettingMenuService,
+)
 from services.supply_report_service import SupplyReportService
-from services.supply_settings_service import SupplySettingService
 from settings import cfg
 
 
@@ -22,7 +26,9 @@ class Container(containers.DeclarativeContainer):
 
     main_menu_service = providers.Factory(MainMenuService, menu_categories_repo=menu_categories_repo)
     settings_menu_service = providers.Factory(SettingsMenuService, menu_categories_repo=menu_categories_repo)
-    supply_settings_service = providers.Factory(SupplySettingService, supply_settings_repo=supply_settings_repo)
+    supply_planning_settings_service = providers.Factory(
+        SupplySettingMenuService, supply_settings_repo=supply_settings_repo
+    )
 
     marketplace_analytics_api = providers.Singleton(
         MarketplaceAnalyticsClient, base_url=cfg.analytics_api_url, token=cfg.wb_token
@@ -36,7 +42,7 @@ class Container(containers.DeclarativeContainer):
         analytics_api_client=marketplace_analytics_api,
         supplies_api_client=marketplace_supplies_api,
         warehouses_repo=warehouses_repo,
-        supply_settings_service=supply_settings_service,
+        supply_settings_repo=supply_settings_repo,
     )
     supply_report_service = providers.Factory(SupplyReportService)
     supply_planning_service = providers.Factory(

@@ -1,4 +1,4 @@
-from pydantic import ConfigDict, Field, PostgresDsn, computed_field
+from pydantic import Field, PostgresDsn, computed_field, field_validator
 from pydantic_settings import BaseSettings
 
 
@@ -17,6 +17,7 @@ class Settings(BaseSettings):
 
     support_username: str = Field("user", alias="SUPPORT_USERNAME")
     timezone: str = Field("Asia/Yekaterinburg", alias="TZ")
+    allowed_usernames: str = Field("", alias="ALLOWED_USERNAMES")
 
     @computed_field
     @property
@@ -29,6 +30,14 @@ class Settings(BaseSettings):
             port=self.postgres_port,
             path=self.postgres_database,
         )
+
+    @field_validator("allowed_usernames", mode="after")
+    def parse_allowed_user_ids(v):
+        if isinstance(v, str):
+            if not v.strip():
+                return []
+            return [x.strip() for x in v.split(",") if x.strip()]
+        return v
 
 
 cfg = Settings()

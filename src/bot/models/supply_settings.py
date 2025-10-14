@@ -10,3 +10,4 @@ class SupplySettings(Base):
     name: Mapped[str] = mapped_column(nullable=False, unique=True)
     value: Mapped[int] = mapped_column(nullable=False)
     description: Mapped[str] = mapped_column(nullable=False)
+    short_name: Mapped[str] = mapped_column(nullable=False)

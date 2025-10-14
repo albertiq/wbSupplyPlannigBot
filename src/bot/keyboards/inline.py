@@ -10,3 +10,4 @@ class KeyboardButton:
         text="✉️ Написать в поддержку",
         url=f"tg://resolve?domain={cfg.support_username}",
     )
+    REFRESH_BUTTON = InlineKeyboardButton(text="🔄 Обновить", callback_data="refresh_settings")
