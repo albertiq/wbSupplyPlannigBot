@@ -136,11 +136,11 @@ class MarketplaceService(AsyncBaseService):
 
             if to_client > min_to_client and warehouse_remains <= warehouse_remains_threshold:
                 match to_client:
-                    case q if q < max_to_client_low:
+                    case q if q <= max_to_client_low:
                         quantity = quantity_small
-                    case q if max_to_client_low < q < max_to_client_medium:
+                    case q if max_to_client_low <= q <= max_to_client_medium:
                         quantity = quantity_medium
-                    case q if q > max_to_client_medium:
+                    case q if q >= max_to_client_medium:
                         quantity = quantity_large
                 result.append(
                     {
